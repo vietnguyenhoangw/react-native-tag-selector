@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
+import LinearGradient from "react-native-linear-gradient";
+
 
 export class TagSelector extends Component {
     /**
@@ -17,6 +19,8 @@ export class TagSelector extends Component {
      * @param {StyleSheet} separatorStyle separator between tags and expand button style
      * @param {StyleSheet} expandBtnStyle expand button style
      * @param {StyleSheet} expandTextStyle expand button text style
+     * @param {StyleSheet} selectTextStyle expand button text style
+     * @param {Array} gradientColor gradient button select colors ['color1', 'color2']
      */
 
     constructor(props) {
@@ -38,15 +42,26 @@ export class TagSelector extends Component {
     }
 
     renderTag = (tag) => {
-        const { selectedTagStyle, tagStyle, maxHeight } = this.props;
+        const { selectedTagStyle, tagStyle, maxHeight, selectTextStyle, gradientColor} = this.props;
         return (
-            <Text style={this.state.tagsSelected.includes(tag.id) ?
-                selectedTagStyle : tagStyle}
-                onPress={() => this.onTagSelected(tag.id)}
-                key={tag.id}
-                onLayout={maxHeight > 0 ? this.onLayoutTag : () => { }}>
-                {tag.name}
-            </Text>
+            (!this.state.tagsSelected.includes(tag.id) ?
+                <Text style={tagStyle}
+                    onPress={() => this.onTagSelected(tag.id)}
+                    key={tag.id}
+                    onLayout={maxHeight > 0 ? this.onLayoutTag : () => { }}>
+                    {tag.name}
+                </Text> 
+                :
+                <LinearGradient colors={gradientColor} style={selectedTagStyle}>
+                    <Text
+                        style={selectTextStyle}
+                        onPress={() => this.onTagSelected(tag.id)}
+                        key={tag.id}
+                        onLayout={maxHeight > 0 ? this.onLayoutTag : () => { }}>
+                        {tag.name}
+                    </Text> 
+                </LinearGradient> 
+            )
         );
     }
 
@@ -90,13 +105,15 @@ TagSelector.propTypes = {
     maxHeight: PropTypes.number,
     tags: PropTypes.array.isRequired,
     expandCaptions: PropTypes.array,
+    gradientColor: PropTypes.array,
     expdandedContainerStyle: ViewPropTypes.style,
     containerStyle: ViewPropTypes.style,
     selectedTagStyle: Text.propTypes.style,
     tagStyle: Text.propTypes.style,
     separatorStyle: ViewPropTypes.style,
     expandBtnStyle: ViewPropTypes.style,
-    expandTextStyle: Text.propTypes.style
+    expandTextStyle: Text.propTypes.style,
+    selectTextStyle: Text.propTypes.style
 }
 
 const styles = StyleSheet.create({
@@ -146,11 +163,18 @@ const styles = StyleSheet.create({
         margin: 2,
         color: 'white',
         backgroundColor: '#6242f4'
+    },
+    selectTextStyles: {
+        color: 'white', 
+        height: 40, 
+        lineHeight: 50 , 
+        alignSelf: 'center',
     }
 })
 
 TagSelector.defaultProps = {
     expandCaptions: ['more', 'less'],
+    gradientColor:['#EA3BA8', '#EB494A'],
     expdandedContainerStyle: styles.containerExpanded,
     containerStyle: styles.container,
     selectedTagStyle: styles.tagSelected,
@@ -158,6 +182,7 @@ TagSelector.defaultProps = {
     separatorStyle: styles.showMore,
     expandBtnStyle: styles.btnStyle,
     expandTextStyle: styles.btnText,
+    selectTextStyle: styles.selectTextStyles,
     maxHeight: 0
 }
 
