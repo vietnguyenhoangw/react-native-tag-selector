@@ -58,7 +58,7 @@ export class TagSelector extends Component {
     } = this.props;
 
     return !this.state.tagsSelected.includes(tag.id) ? (
-      <View>
+      <View style={tagContainerStyle}>
         <Text
           style={tagStyle}
           onPress={() => this.onTagSelected(tag.id)}
