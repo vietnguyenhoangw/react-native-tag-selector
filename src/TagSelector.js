@@ -21,6 +21,7 @@ export class TagSelector extends Component {
    * @param {StyleSheet} expdandedContainerStyle style of expanded container
    * @param {StyleSheet} containerStyle style of default container
    * @param {StyleSheet} selectedTagStyle selected tag style
+   * @param {StyleSheet} tagContainerStyle selected tag style
    * @param {StyleSheet} tagStyle default tag style
    * @param {StyleSheet} separatorStyle separator between tags and expand button style
    * @param {StyleSheet} expandBtnStyle expand button style
@@ -48,6 +49,7 @@ export class TagSelector extends Component {
 
   renderTag = (tag) => {
     const {
+      tagContainerStyle,
       selectedTagStyle,
       tagStyle,
       maxHeight,
@@ -56,14 +58,16 @@ export class TagSelector extends Component {
     } = this.props;
 
     return !this.state.tagsSelected.includes(tag.id) ? (
-      <Text
-        style={tagStyle}
-        onPress={() => this.onTagSelected(tag.id)}
-        key={tag.id}
-        onLayout={maxHeight > 0 ? this.onLayoutTag : () => {}}
-      >
-        {tag.name}
-      </Text>
+      <View>
+        <Text
+          style={tagStyle}
+          onPress={() => this.onTagSelected(tag.id)}
+          key={tag.id}
+          onLayout={maxHeight > 0 ? this.onLayoutTag : () => {}}
+        >
+          {tag.name}
+        </Text>
+      </View>
     ) : (
       <LinearGradient colors={gradientColor} style={selectedTagStyle}>
         <Text
@@ -138,6 +142,7 @@ TagSelector.propTypes = {
   expdandedContainerStyle: ViewPropTypes.style,
   containerStyle: ViewPropTypes.style,
   selectedTagStyle: Text.propTypes.style,
+  tagContainerStyle: Text.propTypes.style,
   tagStyle: Text.propTypes.style,
   separatorStyle: ViewPropTypes.style,
   expandBtnStyle: ViewPropTypes.style,
